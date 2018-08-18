@@ -206,5 +206,22 @@ Here's a [link to my video result](./project_video_output.mp4)
 ### Discussion
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Most of the implementation in the code is inspired by the udacity code samples. But one particular difficulty/case where the pipeline would fail is like changing lanes vides, as in the algorithm
+```
+def update_polynomial_coef(self, left_fit, right_fit):
+        """Update the polynomial fitting co-efficients
+        """
+        if self.first_frame_processed:
+            left_error = ((self.left_fit[0] - left_fit[0]) ** 2).mean(axis=None)      
+            right_error = ((self.right_fit[0] - right_fit[0]) ** 2).mean(axis=None)        
+            if left_error < self.mse_tolerance:
+                self.left_fit = 0.75 * self.left_fit + 0.25 * left_fit   
+            if right_error < self.mse_tolerance:
+                self.right_fit = 0.75 * self.right_fit + 0.25 * right_fit
+        else:
+            self.right_fit = right_fit
+            self.left_fit = left_fit
+        
+        self.update_radius(self.right_fit)
+```
+it has weighted components for left and right lane. As evident from the challenge video too, if there is color difference between new road and old road, this will probably lead to failure, i think this can be corrected with threshold and extra conditions line keeping track of multiple lines. Also, adding check for more corner cases will help.
